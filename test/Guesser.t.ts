@@ -12,6 +12,6 @@ describe("Guesser", function () {
   });
 
   it("", async () => {
-    guesser;
+    console.log((await guesser.guess()).toNumber());
   });
 });
