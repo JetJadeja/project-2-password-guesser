@@ -10,7 +10,6 @@ import { IGuesser } from "./interfaces/IGuesser.sol";
     @notice Guesses passwords
 */
 contract Guesser {
-  function guess() external pure returns (uint256) {
-    return 100;
-  }
+  function guess() external pure returns (uint256) {}
 }
+
