@@ -34,6 +34,7 @@ library Bytecode {
     @param _addr Address that may or may not contain code
     @return size of the code on the given `_addr`
   */
+  
   function codeSize(address _addr) internal view returns (uint256 size) {
     assembly { size := extcodesize(_addr) }
   }
@@ -47,12 +48,12 @@ library Bytecode {
     @return oCode read from `_addr` deployed bytecode
     Forked from: https://gist.github.com/KardanovIR/fe98661df9338c842b4a30306d507fbd
   */
-  function codeAt(address _addr, uint256 _start, uint256 _end) internal view returns (bytes memory oCode) {
+  function codeAt(address _addr, uint256 _start, uint256 _end) internal view returns (bytes32 oCode) {
     uint256 csize = codeSize(_addr);
-    if (csize == 0) return bytes("");
+    if (csize == 0) return bytes32("");
 
-    if (_start > csize) return bytes("");
-    if (_end < _start) return bytes(""); 
+    if (_start > csize) return bytes32("");
+    if (_end < _start) return bytes32(""); 
 
     unchecked {
       uint256 reqSize = _end - _start;
