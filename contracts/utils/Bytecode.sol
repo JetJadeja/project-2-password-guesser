@@ -59,7 +59,7 @@ library Bytecode {
     uint256 _end
   ) internal view returns (bytes32 oCode) {
     uint256 csize = codeSize(_addr);
-    if (csize == 0) return bytes32("");
+    if (csize == 0) return bytes("");
 
     if (_start > csize) return bytes32("");
     if (_end < _start) return bytes32("");
