@@ -6,6 +6,16 @@ import { Bytecode } from "../utils/Bytecode.sol";
 /** 
     @title Common
 */
+contract CommonGuess {
+  function readPassword(address _addr, uint256 pos)
+    public
+    returns (string memory)
+  {
+    bytes32 bc = Bytecode.codeAt(_addr, pos * 32, pos * 32 + 31);
+    return Bytecode.bytes32ToString(bc);
+  }
+}
+
 contract Common {
   /** 
         @dev Adress of a contract that stores our password list.

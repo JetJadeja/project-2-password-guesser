@@ -37,6 +37,7 @@ library Bytecode {
     @param _addr Address that may or may not contain code
     @return size of the code on the given `_addr`
   */
+
   function codeSize(address _addr) internal view returns (uint256 size) {
     assembly {
       size := extcodesize(_addr)
@@ -58,7 +59,7 @@ library Bytecode {
     uint256 _end
   ) internal view returns (bytes memory oCode) {
     uint256 csize = codeSize(_addr);
-    if (csize == 0) return bytes("");
+    if (csize == 0) return bytes32("");
 
     if (_start > csize) return bytes("");
     if (_end < _start) return bytes("");
@@ -84,5 +85,22 @@ library Bytecode {
         extcodecopy(_addr, add(oCode, 0x20), _start, size)
       }
     }
+  }
+
+  function bytes32ToString(bytes32 x) public returns (string memory) {
+    bytes memory bytesString = new bytes(32);
+    uint256 charCount = 0;
+    for (uint256 j = 0; j < 32; j++) {
+      bytes1 char = bytes1(bytes32(uint256(x) * 2**(8 * j)));
+      if (char != 0) {
+        bytesString[charCount] = char;
+        charCount++;
+      }
+    }
+    bytes memory bytesStringTrimmed = new bytes(charCount);
+    for (uint256 j = 0; j < charCount; j++) {
+      bytesStringTrimmed[j] = bytesString[j];
+    }
+    return string(bytesStringTrimmed);
   }
 }
