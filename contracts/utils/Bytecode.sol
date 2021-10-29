@@ -1,15 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.3;
 
-
 library Bytecode {
-  
   /**
     @notice Generate a creation code that results on a contract with `_code` as bytecode
     @param _code The returning value of the resulting `creationCode`
     @return creationCode (constructor) for new contract
   */
-  function creationCodeFor(bytes memory _code) internal pure returns (bytes memory) {
+  function creationCodeFor(bytes memory _code)
+    internal
+    pure
+    returns (bytes memory)
+  {
     /*
       0x00    0x63         0x63XXXXXX  PUSH4 _code.length  size
       0x01    0x80         0x80        DUP1                size size
@@ -21,12 +23,13 @@ library Bytecode {
       <CODE>
     */
 
-    return abi.encodePacked(
-      hex"63",
-      uint32(_code.length),
-      hex"80_60_0E_60_00_39_60_00_F3",
-      _code
-    );
+    return
+      abi.encodePacked(
+        hex"63",
+        uint32(_code.length),
+        hex"80_60_0E_60_00_39_60_00_F3",
+        _code
+      );
   }
 
   /**
@@ -35,7 +38,9 @@ library Bytecode {
     @return size of the code on the given `_addr`
   */
   function codeSize(address _addr) internal view returns (uint256 size) {
-    assembly { size := extcodesize(_addr) }
+    assembly {
+      size := extcodesize(_addr)
+    }
   }
 
   /**
@@ -47,12 +52,16 @@ library Bytecode {
     @return oCode read from `_addr` deployed bytecode
     Forked from: https://gist.github.com/KardanovIR/fe98661df9338c842b4a30306d507fbd
   */
-  function codeAt(address _addr, uint256 _start, uint256 _end) internal view returns (bytes memory oCode) {
+  function codeAt(
+    address _addr,
+    uint256 _start,
+    uint256 _end
+  ) internal view returns (bytes memory oCode) {
     uint256 csize = codeSize(_addr);
     if (csize == 0) return bytes("");
 
     if (_start > csize) return bytes("");
-    if (_end < _start) return bytes(""); 
+    if (_end < _start) return bytes("");
 
     unchecked {
       uint256 reqSize = _end - _start;
@@ -65,7 +74,10 @@ library Bytecode {
         // by using o_code = new bytes(size)
         oCode := mload(0x40)
         // new "memory end" including padding
-        mstore(0x40, add(oCode, and(add(add(size, add(_start, 0x20)), 0x1f), not(0x1f))))
+        mstore(
+          0x40,
+          add(oCode, and(add(add(size, add(_start, 0x20)), 0x1f), not(0x1f)))
+        )
         // store length in memory
         mstore(oCode, size)
         // actually retrieve the code, this needs assembly

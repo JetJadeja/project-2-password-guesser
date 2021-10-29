@@ -12,4 +12,3 @@ import { IGuesser } from "./interfaces/IGuesser.sol";
 contract Guesser {
   function guess() external pure returns (uint256) {}
 }
-
