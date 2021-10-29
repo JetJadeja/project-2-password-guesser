@@ -9,6 +9,7 @@ import { Bytecode } from "../utils/Bytecode.sol";
 contract CommonGuess {
   function readPassword(address _addr, uint256 pos)
     public
+    view
     returns (string memory)
   {
     bytes32 bc = Bytecode.codeAt(_addr, pos * 32, pos * 32 + 31);

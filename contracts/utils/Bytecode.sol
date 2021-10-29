@@ -57,12 +57,12 @@ library Bytecode {
     address _addr,
     uint256 _start,
     uint256 _end
-  ) internal view returns (bytes memory oCode) {
+  ) internal view returns (bytes32 oCode) {
     uint256 csize = codeSize(_addr);
     if (csize == 0) return bytes("");
 
-    if (_start > csize) return bytes("");
-    if (_end < _start) return bytes("");
+    if (_start > csize) return bytes32("");
+    if (_end < _start) return bytes32("");
 
     unchecked {
       uint256 reqSize = _end - _start;
@@ -87,16 +87,7 @@ library Bytecode {
     }
   }
 
-function bytesToBytes32(bytes calldata b, uint offset) private pure returns (bytes32) {
-  bytes32 out;
-
-  for (uint i = 0; i < 32; i++) {
-    out |= bytes32(b[offset + i] & 0xFF) >> (i * 8);
-  }
-  return out;
-}
-
-  function bytes32ToString(bytes32 x) public returns (string memory) {
+  function bytes32ToString(bytes32 x) public pure returns (string memory) {
     bytes memory bytesString = new bytes(32);
     uint256 charCount = 0;
     for (uint256 j = 0; j < 32; j++) {
