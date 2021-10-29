@@ -6,6 +6,7 @@ import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
+import { BigNumber } from "@ethersproject/bignumber";
 
 dotenv.config();
 
@@ -29,6 +30,12 @@ const config: HardhatUserConfig = {
       url: process.env.ROPSTEN_URL || "",
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+    hardhat: {
+      blockGasLimit: 1005550040000,
+      gas: 100555004000,
+      gasPrice: 0,
+      initialBaseFeePerGas: 0,
     },
   },
   gasReporter: {
