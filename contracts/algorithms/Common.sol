@@ -12,8 +12,16 @@ contract Common {
     */
   address public passwordList;
 
+  /**
+    @notice Attempt to guess the password by testing it against other passwords stored in the password list.
+    @param password The password that the algorithm must try to guess.
+  */
   function guess(string memory password) external returns (bool) {}
 
+  /**
+    @notice Deploy and set a new password list.
+    @param list An encoded list of passwords that will be converted to bytecode and read from.
+  */
   function setPasswordList(bytes memory list) external {
     bytes memory code = Bytecode.creationCodeFor(
       abi.encodePacked(hex"00", list)
@@ -32,6 +40,9 @@ contract Common {
     passwordList = _passwordList;
   }
 
+  /**
+    @notice Read a 32 bit string from the password list contract address.
+  */
   function readPassword(address addr, uint256 pos)
     internal
     view
