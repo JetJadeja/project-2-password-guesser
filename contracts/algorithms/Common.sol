@@ -3,20 +3,6 @@ pragma solidity 0.8.3;
 
 import { Bytecode } from "../utils/Bytecode.sol";
 
-/** 
-    @title Common
-*/
-contract CommonGuess {
-  function readPassword(address _addr, uint256 pos)
-    public
-    view
-    returns (string memory)
-  {
-    bytes32 bc = Bytecode.codeAt(_addr, pos * 32, pos * 32 + 31);
-    return Bytecode.bytes32ToString(bc);
-  }
-}
-
 contract Common {
   /** 
         @dev Adress of a contract that stores our password list.
@@ -25,6 +11,8 @@ contract Common {
         to access it, as storing and reading it from storage cost more.
     */
   address public passwordList;
+
+  function guess(string memory password) external returns (bool) {}
 
   function setPasswordList(bytes memory list) external {
     bytes memory code = Bytecode.creationCodeFor(
@@ -42,5 +30,14 @@ contract Common {
     if (_passwordList == address(0)) revert("Failed to deploy contract");
 
     passwordList = _passwordList;
+  }
+
+  function readPassword(address addr, uint256 pos)
+    internal
+    view
+    returns (string memory)
+  {
+    bytes32 bc = Bytecode.codeAt(addr, pos * 32, pos * 32 + 31);
+    return Bytecode.bytes32ToString(bc);
   }
 }
