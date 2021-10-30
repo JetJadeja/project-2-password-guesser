@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: GNU
 pragma solidity 0.8.3;
 
-import { Bytecode } from "../utils/Bytecode.sol";
+import { SSTORE2, Bytecode } from "../libraries/SSTORE2.sol";
+
+import "hardhat/console.sol";
 
 contract Common {
   /** 
@@ -19,45 +21,31 @@ contract Common {
 
   /**
     @notice Attempt to guess the password by testing it against other passwords stored in the password list.
-    @param password The password that the algorithm must try to guess.
+    @param password A byte array that represents the password that the algorithm must try to guess.
   */
-  function guess(string memory password) external view returns (bool, uint256) {
+  function guess(bytes memory password) external view returns (bool, uint256) {
     // Store value in memory to save gas.
     uint256 _listSize = listSize;
 
-    for (uint256 i = 0; i < _listSize; i++) {
+    for (uint256 i; i < _listSize; i++) {
       // Get the password from the list.
-      string memory _password = readPassword(passwordList, i);
+      bytes memory _password = readPassword(passwordList, i);
 
-      if (
-        keccak256(abi.encodePacked(password)) ==
-        keccak256(abi.encodePacked(_password))
-      ) {
-        return (true, i);
+      if (keccak256(abi.encode(password)) == keccak256(abi.encode(_password))) {
+        return (true, i + 1);
       }
     }
+
+    return (false, _listSize);
   }
 
   /**
     @notice Deploy and set a new password list.
-    @param list An encoded list of passwords that will be converted to bytecode and read from.
+    @param passwords The password strings that are being stored.
   */
-  function setPasswordList(bytes memory list, uint256 _listSize) external {
-    bytes memory code = Bytecode.creationCodeFor(
-      abi.encodePacked(hex"00", list)
-    );
-
-    address _passwordList;
-
-    // Deploy contract using create
-    assembly {
-      _passwordList := create(0, add(code, 32), mload(code))
-    }
-
-    // Address MUST be non-zero
-    if (_passwordList == address(0)) revert("Failed to deploy contract");
-
-    passwordList = _passwordList;
+  function setPasswordList(bytes memory passwords, uint256 _listSize) external {
+    // Write the data to the contract.
+    passwordList = SSTORE2.write(passwords);
     listSize = _listSize;
   }
 
@@ -67,9 +55,8 @@ contract Common {
   function readPassword(address addr, uint256 pos)
     internal
     view
-    returns (string memory)
+    returns (bytes memory)
   {
-    bytes32 bc = Bytecode.codeAt(addr, pos * 32, pos * 32 + 31);
-    return Bytecode.bytes32ToString(bc);
+    return SSTORE2.read(addr, pos * 32, pos * 32 + 32);
   }
 }
