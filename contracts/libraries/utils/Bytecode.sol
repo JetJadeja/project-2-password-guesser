@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.3;
+pragma solidity ^0.8.3;
 
 library Bytecode {
   /**
@@ -37,7 +37,6 @@ library Bytecode {
     @param _addr Address that may or may not contain code
     @return size of the code on the given `_addr`
   */
-
   function codeSize(address _addr) internal view returns (uint256 size) {
     assembly {
       size := extcodesize(_addr)
@@ -51,18 +50,19 @@ library Bytecode {
     @param _start number of bytes of code to skip on read
     @param _end index before which to end extraction
     @return oCode read from `_addr` deployed bytecode
+
     Forked from: https://gist.github.com/KardanovIR/fe98661df9338c842b4a30306d507fbd
   */
   function codeAt(
     address _addr,
     uint256 _start,
     uint256 _end
-  ) internal view returns (bytes32 oCode) {
+  ) internal view returns (bytes memory oCode) {
     uint256 csize = codeSize(_addr);
-    if (csize == 0) return bytes32("");
+    if (csize == 0) return bytes("");
 
-    if (_start > csize) return bytes32("");
-    if (_end < _start) return bytes32("");
+    if (_start > csize) return bytes("");
+    if (_end < _start) revert("Invalid Code at Range");
 
     unchecked {
       uint256 reqSize = _end - _start;
@@ -85,22 +85,5 @@ library Bytecode {
         extcodecopy(_addr, add(oCode, 0x20), _start, size)
       }
     }
-  }
-
-  function bytes32ToString(bytes32 x) public pure returns (string memory) {
-    bytes memory bytesString = new bytes(32);
-    uint256 charCount = 0;
-    for (uint256 j = 0; j < 32; j++) {
-      bytes1 char = bytes1(bytes32(uint256(x) * 2**(8 * j)));
-      if (char != 0) {
-        bytesString[charCount] = char;
-        charCount++;
-      }
-    }
-    bytes memory bytesStringTrimmed = new bytes(charCount);
-    for (uint256 j = 0; j < charCount; j++) {
-      bytesStringTrimmed[j] = bytesString[j];
-    }
-    return string(bytesStringTrimmed);
   }
 }
