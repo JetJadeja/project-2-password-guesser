@@ -28,12 +28,16 @@ describe("Guesser", function () {
       const Common = await ethers.getContractFactory("Common");
       common = await Common.deploy();
 
-      await common.setPasswordList(bytecode, 50);
+      await common.setPasswordList(bytecode, 700);
     });
 
     it("Should guess the password, returning the necessary data", async () => {
       expect(
-        (await common.guess(`0x${stringToBytes32(passwords[49])}`))[0]
+        (
+          await common.guess(
+            `0x${stringToBytes32(passwords[Math.floor(Math.random() * 700)])}`
+          )
+        )[0]
       ).to.equal(true);
     });
   });
