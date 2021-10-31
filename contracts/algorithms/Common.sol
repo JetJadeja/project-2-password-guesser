@@ -3,8 +3,6 @@ pragma solidity 0.8.3;
 
 import { SSTORE2, Bytecode } from "../libraries/SSTORE2.sol";
 
-import "hardhat/console.sol";
-
 contract Common {
   /** 
         @dev Adress of a contract that stores our password list.
