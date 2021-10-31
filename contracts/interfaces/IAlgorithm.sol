@@ -2,5 +2,5 @@
 pragma solidity 0.8.3;
 
 interface IAlgorithm {
-  function run(bytes calldata) external returns (uint256);
+  function guess(bytes memory) external returns (bool, uint256);
 }

@@ -7,6 +7,8 @@ import fs from "fs";
 let guesser: Contract;
 
 describe("Guesser", function () {
+  this.timeout(300000); // Set new timeout
+
   beforeEach(async () => {
     const Guesser = await ethers.getContractFactory("Guesser");
     guesser = await Guesser.deploy();
@@ -41,6 +43,26 @@ describe("Guesser", function () {
       ).to.equal(true);
     });
   });
+
+  describe("Brute Force", async () => {
+    it("Should guess the password", async () => {
+      const BruteForce = await ethers.getContractFactory("BruteForce");
+      const bruteForce = await BruteForce.deploy();
+
+      expect((await bruteForce.guess(stringToBytes("iloveyou")))[0]).to.equal(
+        true
+      );
+    });
+  });
+
+  describe("Random", async () => {
+    it("Should guess the password", async () => {
+      const Random = await ethers.getContractFactory("Random");
+      const random = await Random.deploy();
+
+      await random.guess(stringToBytes("i"));
+    });
+  });
 });
 
 function encodeArgs(types: string[], values: any[]): string {
@@ -56,4 +78,8 @@ function stringToBytes32(text: string) {
   }
 
   return bytes.substring(2);
+}
+
+function stringToBytes(text: string) {
+  return ethers.utils.hexlify(ethers.utils.toUtf8Bytes(text));
 }
