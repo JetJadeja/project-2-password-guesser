@@ -53,18 +53,20 @@ term.singleColumnMenu( items , function( error: any , response: any ) {
       if(responsea.selectedIndex == 0){ //Common
         chosen = "Common"
       }else if(responsea.selectedIndex == 0){
-        chosen = "Brute Force"
+        chosen = "BruteForce"
       }else if(responsea.selectedIndex == 0){
         chosen = "Random"
       }
       term("\nPassword to test will be:\n");
-      term('\n').inputField(function(error: any, input: any){
+      term('\n').inputField(async function(error: any, input: any){
         chosenPass = input;
-        main("hi", chosen, chosenPass).catch((error) => {
+        await main("hi", chosen, chosenPass).catch((error) => {
           console.error(error);
           process.exitCode = 1;
-        });
-        process.exit();
+
+        }
+        );
+        //process.exit();
       });
     });
    
@@ -109,17 +111,18 @@ async function main(input: string, algo: string, password: string) {
     const common = await Common.deploy();
 
     await common.setPasswordList(bytecode, 700);
-    await common.guess(stringToBytes(password));
+    var o1, o2 = await common.guess(stringToBytes(password));
+    term("Guessed Password Correctly: ", o1, "\nNumber of Tries: ", o2)
   } else if (algo === "BruteForce") {
     const BruteForce = await ethers.getContractFactory("BruteForce");
     const bruteForce = await BruteForce.deploy();
-
-    bruteForce.guess(stringToBytes(password));
+    var o1, o2 = await bruteForce.guess(stringToBytes(password));
+    term("Guessed Password Correctly: ", o1, "\nNumber of Tries: ", o2)
   } else if (algo === "Random") {
     const Random = await ethers.getContractFactory("Random");
     const random = await Random.deploy();
-
-    await random.guess(stringToBytes(password));
+    var o1, o2 = await random.guess(stringToBytes(password));
+    term("Guessed Password Correctly: ", o1, "\nNumber of Tries: ", o2)
   }
 }
 

@@ -25,7 +25,7 @@ contract Common {
     // Store value in memory to save gas.
     uint256 _listSize = listSize;
 
-    for (uint256 i; i < _listSize; i++) {
+    for (uint256 i = 0; i < _listSize; i++) {
       // Get the password from the list.
       bytes memory _password = readPassword(passwordList, i);
 
@@ -34,7 +34,7 @@ contract Common {
       }
     }
 
-    return (false, _listSize);
+    return (false,_listSize);
   }
 
   /**
