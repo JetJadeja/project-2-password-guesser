@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/JetJadeja/project-2-password-guesser#readme",
   "dependencies": {
-    "hardhat": "^2.6.6"
+    "hardhat": "^2.6.6",
+    "terminal-kit": "^2.1.8"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",
