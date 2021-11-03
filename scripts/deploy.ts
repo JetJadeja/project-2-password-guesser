@@ -113,16 +113,21 @@ async function main(input: string, algo: string, password: string) {
     await common.setPasswordList(bytecode, 700);
     var o1, o2 = await common.guess(stringToBytes(password));
     term("Guessed Password Correctly: ", o1, "\nNumber of Tries: ", o2)
+    term("\nYou could try to diversify your password with special symbols, e.g. 'maverick' becomes 'mav3r1ck")
+
   } else if (algo === "BruteForce") {
     const BruteForce = await ethers.getContractFactory("BruteForce");
     const bruteForce = await BruteForce.deploy();
     var o1, o2 = await bruteForce.guess(stringToBytes(password));
     term("Guessed Password Correctly: ", o1, "\nNumber of Tries: ", o2)
+    term("\n An increase in the length of this password would significantly increase its difficultly, considering adding more characters to it.")
   } else if (algo === "Random") {
     const Random = await ethers.getContractFactory("Random");
     const random = await Random.deploy();
     var o1, o2 = await random.guess(stringToBytes(password));
     term("Guessed Password Correctly: ", o1, "\nNumber of Tries: ", o2)
+    term("\nIf this message is deployed then that means that the random pass generator guessed it correctly,\n you should feel lucky to even exist in the same 1000 years as an instance of this occurring.")
+
   }
 }
 
