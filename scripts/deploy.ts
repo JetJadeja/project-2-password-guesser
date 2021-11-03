@@ -21,8 +21,8 @@ var chosenPass = '';
   term.table( [
       [ 'ALGORITHIM', 'Big-O Time' , 'description'] ,
       [ 'Common Password', 'Best: O(1)\nAverage: O(n)\nWorst: Fails' , "The Common Password attack runs through a list of common passwords and tests them against the inputted password."] ,
-      [ 'Brute Force' , 'Best: O(1)\nAverage: O(n)\nWorst: O(128^n)', 'The Brute Force attack runs through all possible passwords and tests them against the inputted password.'] ,
-      [ 'Random' , 'Best: O(1)\nAverage:O()\nWorst: O(∞)', 'Random generates a random password hash using the current gas as a seed.']
+      [ 'Brute Force' , 'Best: O(1)\nAverage: O(n)\nWorst: O(128\^n)', 'The Brute Force attack runs through all possible passwords and tests them against the inputted password.'] ,
+      [ 'Random' , 'Best: O(1)\nAverage:O(1 / 128\^n)\nWorst: O(∞)', 'Random generates a random password hash using the current gas as a seed.']
     ] , {
       hasBorder: true ,
       contentHasMarkup: true ,
@@ -75,23 +75,23 @@ term.singleColumnMenu( items , function( error: any , response: any ) {
     term.singleLineMenu( algos , options , function( error: any , responsea: any ) {
       if(responsea.selectedIndex == 0){ //Common
       term( '\n' ).eraseLineAfter.white(
-      'Explanations of Time Complexity:\n^GBest: \nO(1) because the first pass it tries could be correct pass.\n',
-       '^RWorst: \n None, the password could very well just not be one of the ones in the list and then the list would fail.\n',
-        "^WAverage: \nO(n) assuming that the list contains the password used, otherwise none.\n"
+      'Explanations of Time Complexity:\n^GBest: \nO(1) because the first pass it tries could be correct pass.',
+       '\n^RWorst: \n None, the password could very well just not be one of the ones in the list and then the list would fail.',
+        "\n^WAverage: \nO(n) assuming that the list contains the password used, otherwise none.\n"
       );
       }
       if(responsea.selectedIndex == 1){ //Brute
         term( '\n' ).eraseLineAfter.white(
           'Explanations of Time Complexity:\n^GBest: \nO(1) because the password could be 0x0.\n',
-           '^RWorst: \nO(128', '^n', ') because there are 128 ASCII characters and thus for every character in the password string we exponentially increase the amount of time needed to guess the correct string hash.\n',
-            '^WAverage: \nO(128', '^n', ') because the time to find an answer increases exponentially as the task size increases.'
+           ' ^RWorst: \nO(128\^n) because there are 128 ASCII characters and thus for every character in the password string we exponentially increase the amount of time needed to guess the correct string hash.\n',
+            ' ^WAverage: \nO(128\^n) because the time to find an answer increases exponentially as the task size increases.'
           );
         }
         if(responsea.selectedIndex == 2){ //Random
           term( '\n' ).eraseLineAfter.white(
-            'Explanations of Time Complexity:\n^GBest: \text\n',
-             '^RWorst: \ntext\n',
-              '^WAverage: \ntext \n'
+            'Explanations of Time Complexity:\n^GBest: \nO(1) though unlikely, the first password that this guesses could be the correct password.\n',
+             ' ^RWorst: \nO(128\^n) because there are 128 characters in ascii and the proability of getting a correct answer decreases as the string gets longer.\n',
+              '^WAverage: \nO(1 / 128\^n): Chance of getting the hash correct on any one run.\n'
             );
           }
       process.exit();

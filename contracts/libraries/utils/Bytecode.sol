@@ -86,6 +86,19 @@ library Bytecode {
       }
     }
   }
+function toBinaryString(uint256 n) public pure returns (string memory) {
+        // revert on out of range input
+        require(n < 32);
+
+        bytes memory output = new bytes(5);
+
+        for (uint8 i = 0; i < 5; i++) {
+            output[4 - i] = (n % 2 == 1) ? bytes1("1") : bytes1("0");
+            n /= 2;
+        }
+
+        return string(output);
+    }
 
   function bytesToBytes32(bytes memory source)
     internal
