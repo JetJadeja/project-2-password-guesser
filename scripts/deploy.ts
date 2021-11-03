@@ -58,7 +58,7 @@ term.singleColumnMenu( items , function( error: any , response: any ) {
         chosen = "Random"
       }
       term("\nPassword to test will be:\n");
-      term('\n').inputField(async function(error: any, input: any){
+      term().inputField(async function(error: any, input: string){
         chosenPass = input;
         await main("hi", chosen, chosenPass).catch((error) => {
           console.error(error);
@@ -66,7 +66,7 @@ term.singleColumnMenu( items , function( error: any , response: any ) {
 
         }
         );
-        //process.exit();
+        process.exit();
       });
     });
    
@@ -104,28 +104,30 @@ async function main(input: string, algo: string, password: string) {
   if (algo === "Common") {
     let bytecode = "0x";
     for (let i = 0; i < passwords.length; i++) {
-      bytecode += stringToBytes32(passwords[i]);
+      bytecode += stringToBytes32(passwords[i].trimEnd());
     }
 
     const Common = await ethers.getContractFactory("Common");
     const common = await Common.deploy();
 
     await common.setPasswordList(bytecode, 700);
-    var o1, o2 = await common.guess(stringToBytes(password));
-    term("Guessed Password Correctly: ", o1, "\nNumber of Tries: ", o2)
+      console.log(`0x${stringToBytes32(password)}`);
+    //var o1, o2 = await common.guess((`0x${stringToBytes32(password)}`))
+    var o1, o2 = await common.guess(`0x${stringToBytes32(password)}`)
+    term("\nGuessed Password: ", o1, "\nNumber of Tries: ", o2)
     term("\nYou could try to diversify your password with special symbols, e.g. 'maverick' becomes 'mav3r1ck")
 
   } else if (algo === "BruteForce") {
-    const BruteForce = await ethers.getContractFactory("BruteForce");
+    const BruteForce = await ethers.getContractFactory(`0x${stringToBytes32(password)}`);
     const bruteForce = await BruteForce.deploy();
     var o1, o2 = await bruteForce.guess(stringToBytes(password));
-    term("Guessed Password Correctly: ", o1, "\nNumber of Tries: ", o2)
+    term("\nGuessed Password Correctly: ", o1, "\nNumber of Tries: ", o2)
     term("\n An increase in the length of this password would significantly increase its difficultly, considering adding more characters to it.")
   } else if (algo === "Random") {
-    const Random = await ethers.getContractFactory("Random");
+    const Random = await ethers.getContractFactory(`0x${stringToBytes32(password)}`);
     const random = await Random.deploy();
     var o1, o2 = await random.guess(stringToBytes(password));
-    term("Guessed Password Correctly: ", o1, "\nNumber of Tries: ", o2)
+    term("\nGuessed Password Correctly: ", o1, "\nNumber of Tries: ", o2)
     term("\nIf this message is deployed then that means that the random pass generator guessed it correctly,\n you should feel lucky to even exist in the same 1000 years as an instance of this occurring.")
 
   }
