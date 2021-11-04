@@ -24,9 +24,9 @@ The problem with this, however, is that it's very inefficient to both write data
 
 Yet, we still were able to come up with an idea that is practically genius. In the EVM, smart contracts are pieces of EVM bytecode that can be interacted with, once deployed. As stated above, deploying a smart contract to the Ethereum platform is similar to instantiating a new class in the JVM.
 
-Smart contracts, though, are solely used to hold executable bytecode that users can interact with. For example, the algorithms that are used for this project are all smart contracts that, while written in Solidity, are compiled to bytecode and deployed to a local testnet when they need to be used.
+Smart contracts, though, are solely used to hold executable bytecode that users can interact with. For example, the algorithms that are used for this project are all smart contracts that, while written in Solidity, are compiled to bytecode and deployed to a local testnet when they need to be used. However, the bytecode doesn't actually have to be *bytecode*; you're simply able to deploy a raw array of bytes without issue!
 
-However, we realized that deploying and reading external bytecode is much cheaper than storing data to storage, but since this hadn't been done before, it was quite difficult to implement. We eventually were able to get it to work; and this is how.
+After realizing that we could take advantage of this, to decided to implement it! While we ran into so many issues, we eventually were able to get it to work; and this is how:
 
 First, our list of common passwords is converted to bytes. However, in order for our contract to sucessfully iterate through the passwords on-chain, the size of each password needs to be known. This is impossible for the smart contract to know, so we decided to make each password a left-padded 32 byte array, so that the smart contract only needed to iterate over 32 bytes at a time for each password. Next, this large byte array is deployed to the network and its unique address is stored within our algorithm contract (so that it can be accessed later).
 
